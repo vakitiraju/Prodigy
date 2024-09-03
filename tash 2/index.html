@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stopwatch</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="stopwatch">
+    <h1 id="display">00:00:00</h1>
+    <button id="start">Start</button>
+    <button id="pause">Pause</button>
+    <button id="reset">Reset</button>
+    <button id="lap">Lap</button>
+  </div>
+
+  <script>
+    let startTime;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    function startTimer() {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(updateTimer, 10);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      elapsedTime = 0;
+      updateTimer();
+    }
+
+    function lapTime() {
+      const formattedTime = formatTime(elapsedTime);
+      const lapTimeDisplay = document.createElement("p");
+      lapTimeDisplay.textContent = "Lap: " + formattedTime;
+      document.body.appendChild(lapTimeDisplay);
+    }
+
+    function updateTimer() {
+      const currentTime = Date.now();
+      elapsedTime = currentTime - startTime;
+      const formattedTime = formatTime(elapsedTime);
+      document.getElementById("display").textContent = formattedTime;
+    }
+
+    function formatTime(time) {
+      const milliseconds = Math.floor((time % 1000) / 10);
+      const seconds = Math.floor((time / 1000) % 60);
+      const minutes = Math.floor((time / (1000 * 60)) % 60);
+      const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+
+      return (
+        pad(hours) + ":" +
+        pad(minutes) + ":" +
+        pad(seconds) + "." +
+        pad(milliseconds)
+      );
+    }
+
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    document.getElementById("start").addEventListener("click", startTimer);
+    document.getElementById("pause").addEventListener("click", pauseTimer);
+    document.getElementById("reset").addEventListener("click", resetTimer);
+    document.getElementById("lap").addEventListener("click", lapTime);
+  </script>
+</body>
+</html>

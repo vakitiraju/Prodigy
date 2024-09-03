@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Weather App</h1>
+    <div class="weather-info">
+      <div class="weather-icon"></div>
+      <div class="temperature"></div>
+      <div class="condition"></div>
+    </div>
+  </div>
+
+  <script>
+    const apiKey = 'c1ea0e92ebce811a0bf78cc168ad351e'; 
+    function fetchWeatherData(location) {
+      const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const weatherIcon = document.querySelector('.weather-icon');
+          const temperature = document.querySelector('.temperature');
+          const condition = document.querySelector('.condition');
+
+          weatherIcon.style.backgroundImage = `url(${data.current.condition.icon})`;
+          temperature.textContent = `${data.current.temp_c}°C`;
+          condition.textContent = data.current.condition.text;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    // Call the fetchWeatherData function with user's location or a user-inputted location
+    fetchWeatherData('London');
+
+    // Add an event listener to the document for clicks
+    document.addEventListener('click', function() {
+      // Prompt the user to enter a location
+      const userLocation = prompt('Enter a location to get the weather:');
+      
+      // Check if the user entered a location and fetch its weather
+      if (userLocation) {
+        fetchWeatherData(userLocation);
+      }
+    });
+  </script>
+</body>
+</html>
